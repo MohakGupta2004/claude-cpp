@@ -7,4 +7,5 @@ class Conversation {
   public:
   void addMessage(const Message& msg);
   void printHistory() const;
+  void clearHistory();
 };

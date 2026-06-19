@@ -9,3 +9,7 @@ void Conversation::printHistory() const {
        std::cout<<m.role<<" : "<<m.content<<std::endl;
      } 
 }
+
+void Conversation::clearHistory() {
+  message.clear();
+}

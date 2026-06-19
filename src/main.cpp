@@ -18,6 +18,10 @@ int main() {
         conversation.printHistory();
         continue;
       }
+      if(input=="clear") {
+        conversation.clearHistory();
+        continue;
+      }
       conversation.addMessage({
         "user", input
       });
