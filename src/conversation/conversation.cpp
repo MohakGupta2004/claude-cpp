@@ -13,3 +13,6 @@ void Conversation::printHistory() const {
 void Conversation::clearHistory() {
   message.clear();
 }
+std::vector<Message> Conversation::getMessage() const {
+  return message;
+}

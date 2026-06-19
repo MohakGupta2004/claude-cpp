@@ -1,9 +1,12 @@
 #include <iostream>
 #include "chat/chatbot.h"
 #include "conversation/conversation.h"
+#include "storage/storage.h"
 int main() {
     Conversation conversation;
+    Storage storage;
     Chatbot bot;
+    storage.load(conversation);
     while(true) {
       std::string input;
       std::cout<<"> ";
@@ -20,6 +23,10 @@ int main() {
       }
       if(input=="clear") {
         conversation.clearHistory();
+        continue;
+      }
+      if(input=="save") {
+        storage.save(conversation);
         continue;
       }
       conversation.addMessage({

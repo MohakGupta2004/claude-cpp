@@ -7,5 +7,6 @@ class Conversation {
   public:
   void addMessage(const Message& msg);
   void printHistory() const;
+  std::vector<Message> getMessage() const;
   void clearHistory();
 };
