@@ -2,31 +2,21 @@
 #include "chat/chatbot.h"
 #include "conversation/conversation.h"
 #include "storage/storage.h"
+#include "commander/commander.h"
 int main() {
     Conversation conversation;
     Storage storage;
     Chatbot bot;
+    Commander handler;
     storage.load(conversation);
     while(true) {
       std::string input;
       std::cout<<"> ";
       std::getline(std::cin, input);
-      if(input.empty()) {
-        continue;
-      }
       if(input == "exit") {
         break;
-      } 
-      if(input == "history") {
-        conversation.printHistory();
-        continue;
       }
-      if(input=="clear") {
-        conversation.clearHistory();
-        continue;
-      }
-      if(input=="save") {
-        storage.save(conversation);
+      if(handler.handle(input, conversation,storage))  {
         continue;
       }
       conversation.addMessage({
