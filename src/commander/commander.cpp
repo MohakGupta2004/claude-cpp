@@ -22,8 +22,11 @@ bool Commander::handle(std::string input, Conversation &conversation,
     return true;
   }
 
-  if (input.substr(0, 6) == "/model") {
+  if (input.substr(0, 7) == "/model " || input=="/model") {
     try {
+      if(input.size()<=7) {
+        std::cout<<"Usage: /model <model-name>" <<std::endl;
+      }
       std::string model_name = input.substr(7);
       provider.setProvider(model_name);
       return true;

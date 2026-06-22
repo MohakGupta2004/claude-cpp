@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 #include "conversation/conversation.h"
 #include "providers/claude_provider.h"
 #include "providers/openai_provider.h"
@@ -14,7 +15,12 @@ int main() {
     ProviderManager provider;
     provider.registerProvider(std::make_shared<Openai>());
     provider.registerProvider(std::make_shared<Claude>());
-    provider.setProvider("openai");
+    try {
+      provider.setProvider("openai");
+    } catch (const std::runtime_error e) {
+      std::cerr<<"Failed to initialize provider: "<<e.what()<<std::endl;
+      return 1;
+    }
     while(true) {
       std::string input;
       std::cout<<"> ";
