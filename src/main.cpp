@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include "config/config.h"
 #include "conversation/conversation.h"
 #include "providers/claude_provider.h"
 #include "providers/openai_provider.h"
@@ -11,10 +12,12 @@ int main() {
     Conversation conversation;
     Storage storage;
     Commander handler;
-    storage.load(conversation);
+    Config config;
     ProviderManager provider;
+    storage.load(conversation);
     provider.registerProvider(std::make_shared<Openai>());
     provider.registerProvider(std::make_shared<Claude>());
+    config.load();
     try {
       provider.setProvider("openai");
     } catch (const std::runtime_error e) {

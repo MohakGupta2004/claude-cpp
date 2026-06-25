@@ -17,9 +17,8 @@ void Storage::save(const Conversation& conversation) {
 }
 
 void Storage::load(Conversation &conversation) {
-  std::ifstream file("./meow.txt");
+  std::ifstream file("./conversation.txt");
   if(!file.is_open()) {
-    std::cerr<<"Error opening file"<<std::endl;
     return;
   }
   std::string text;
