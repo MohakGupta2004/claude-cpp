@@ -1,20 +1,27 @@
+#include <cpr/cprtypes.h>
+#include <cpr/response.h>
 #include <iostream>
 #include <memory>
+#include <ostream>
 #include <stdexcept>
+#include "config/config.h"
 #include "conversation/conversation.h"
 #include "providers/claude_provider.h"
 #include "providers/openai_provider.h"
 #include "providers/provider_manager.h"
 #include "storage/storage.h"
 #include "commander/commander.h"
+#include <cpr/cpr.h>
 int main() {
     Conversation conversation;
     Storage storage;
     Commander handler;
-    storage.load(conversation);
+    Config config;
     ProviderManager provider;
+    storage.load(conversation);
     provider.registerProvider(std::make_shared<Openai>());
     provider.registerProvider(std::make_shared<Claude>());
+    config.load();
     try {
       provider.setProvider("openai");
     } catch (const std::runtime_error e) {
@@ -34,7 +41,7 @@ int main() {
       conversation.addMessage({
         "user", input
       });
-      std::string response = provider.getCurrentProvider().ask(input);
+      std::string response = provider.getCurrentProvider().ask(input, config);
       conversation.addMessage({"assistant", response});
       std::cout<<response<<std::endl;
     }
