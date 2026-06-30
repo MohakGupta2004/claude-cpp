@@ -12,6 +12,7 @@
 #include "storage/storage.h"
 #include "commander/commander.h"
 #include <cpr/cpr.h>
+#include <utility>
 int main() {
     Conversation conversation;
     Storage storage;
@@ -41,9 +42,8 @@ int main() {
       conversation.addMessage({
         "user", input
       });
-      std::string response = provider.getCurrentProvider().ask(input, config);
-      conversation.addMessage({"assistant", response});
-      std::cout<<response<<std::endl;
+      std::pair<std::string, std::string> response = provider.getCurrentProvider().ask(conversation.getMessage(), config);
+      conversation.addMessage({"assistant", response.first});
     }
     return 0;
 }
