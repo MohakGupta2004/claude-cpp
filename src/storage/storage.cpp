@@ -9,7 +9,7 @@ void Storage::save(const Conversation& conversation) {
   for(auto msg:conversations) {
     serialized.push_back(msg.role+"|"+msg.content);
   }
-  std::ofstream outfile("./meow.txt");
+  std::ofstream outfile("./conversation.txt");
   for(const auto& msg:conversations) {
    outfile<<msg.role<<"|"<<msg.content<<std::endl; 
   }

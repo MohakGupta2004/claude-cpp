@@ -4,6 +4,6 @@
 #include <string>
 class Openai:public Provider {
   public:
-    std::string ask(std::string& prompt, Config& config) override;
+    std::pair<std::string, std::string> ask(const std::vector<Message>& history, Config& config) override;
     std::string getName() const override;
 };
