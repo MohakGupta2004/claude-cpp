@@ -7,49 +7,57 @@
 #include <ostream>
 #include <stdexcept>
 #include <string>
+
+namespace fs = std::filesystem;
+
 void Config::load() {
 
-  const char *buffer = nullptr;
+    const char* home = std::getenv("HOME");
 
 #if defined(_WIN32) || defined(_WIN64)
-  buffer = std::getenv("USERNAME");
-#else
-  buffer = std::getenv("USER");
+    if (!home)
+        home = std::getenv("USERPROFILE");
 #endif
 
-  if (buffer == nullptr) {
-    std::cerr << "Could not retrieve username from environment variables."
-              << std::endl;
-    return;
-  }
-  std::string username(buffer);
-  std::string filepath =
-      "/home/" + username + "/.config/claude_cpp/config.json";
-  try {
-    if (std::filesystem::exists(filepath)) {
-      // TODO
-      std::fstream f(filepath);
-      config = json::parse(f);
-    } else {
-      // 2. Only create it if it does not exist
-      std::filesystem::create_directories(
-          std::filesystem::path("/home/" + username + "/.config/claude_cpp/"));
-      std::ofstream file(filepath);
-
-      if (file.is_open()) {
-        file << "{\n \"API_KEY\": {\n   \"claude\":\"\", \n   "
-                "\"openai\":\"\"\n }\n}";
-        file.close();
-        std::cout << "Config files are created. \n";
-        std::cout << "type\n nano ~/.config/claude_cpp/config.json \n add "
-                     "your api key and default provider there \n";
-      }
+    if (!home) {
+        std::cerr << "Could not determine home directory\n";
+        return;
     }
-  } catch (const std::filesystem::filesystem_error e) {
-    std::cout << e.what() << std::endl;
-  }
-}
 
+    fs::path configDir =
+        fs::path(home) / ".config" / "claude_cpp";
+
+    fs::path filepath =
+        configDir / "config.json";
+
+    try {
+
+        if (fs::exists(filepath)) {
+            std::ifstream f(filepath);
+            config = json::parse(f);
+        }
+        else {
+            fs::create_directories(configDir);
+
+            std::ofstream file(filepath);
+
+            file << R"({
+    "API_KEY": {
+        "claude":"",
+        "openai":""
+    }
+})";
+
+            std::cout << "Config file created\n";
+            std::cout << "Edit:\n";
+            std::cout << filepath << '\n';
+        }
+
+    }
+    catch (const fs::filesystem_error& e) {
+        std::cerr << e.what() << '\n';
+    }
+}
 std::string Config::getApiKey(const std::string &provider) {
   std::string apikey;
   try {
